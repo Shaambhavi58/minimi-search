@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Minimi Search</title>
+  <link rel="stylesheet" href="/style.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <aside class="sidebar" aria-label="Chats">
+    <a class="brand" href="/">Minimi Search</a>
+    <button id="new" class="new">+ New chat</button>
+    <nav id="threads" aria-label="Previous chats"></nav>
+  </aside>
+  <main>
+    <section id="transcript" class="transcript" aria-label="Conversation">
+      <div id="welcome" class="welcome">
+        <h1>What would you like to look up?</h1>
+        <p>Ask about the web or follow up on a previous chat.</p>
+        <button id="example">Compare the entry-level plans from Neon and Supabase</button>
+      </div>
+      <div id="messages" class="messages"></div>
+    </section>
+    <div class="bottom">
+      <div id="status" role="status"></div>
+      <form id="composer">
+        <textarea id="question" aria-label="Message" placeholder="Ask a question…" rows="2" maxlength="16000" required></textarea>
+        <button id="send" type="submit">Send</button>
+        <button id="stop" type="button" hidden>Stop</button>
+      </form>
+    </div>
+  </main>
+</body>
+</html>
