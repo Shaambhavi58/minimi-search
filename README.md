@@ -1,30 +1,90 @@
-# Minimi Search
+Minimi Search
 
-A local chat agent with web search, clickable citations and dated memory across chats.
+Minimi Search is a Node.js chat agent that remembers earlier conversations and checks current facts with web search. Ask a follow-up in a new chat and it can recover the original question, recheck the answer against current sources, and link to the evidence.
 
-## Run
+Quick start
 
-Use Node.js 22.13+ and a [Groq API key](https://console.groq.com/keys) with access to GPT-OSS plus a [Tavily API key](https://app.tavily.com/) for web search. A funded OpenAI API key is an alternative.
+You'll need Node.js 22.13+, a Groq API key for chat, and a Tavily API key for web search.
 
-```bash
+git clone https://github.com/Shaambhavi58/minimi-search.git
+cd minimi-search
 npm install
 cp .env.example .env
-# Set GROQ_API_KEY and TAVILY_API_KEY in .env
+
+Set GROQ_API_KEY and TAVILY_API_KEY in .env. If you prefer OpenAI, leave both blank and set a funded OPENAI_API_KEY instead.
+
 npm run dev
-```
 
-Open [http://localhost:3000](http://localhost:3000). The app prefers Groq when a Groq key is configured. Node, SQLite and the browser handle everything else. `npm test` runs offline.
+Open http://localhost:3000.
 
-## Try the follow-up flow
+Try a follow-up across chats
 
-1. Ask, “Shortlist five CRM tools for a 20-person sales team. Include the lowest practical paid tier for each and cite the pricing.”
-2. Click **New chat**. Ask, “What did I ask you today about CRM tools? Is your answer still correct today?”
-3. Ask, “Did any of those prices change since our earlier comparison? Flag anything you can't date.”
 
-The app records dates from the browser's time zone when each message is sent. An unqualified weekday refers to its most recent occurrence, including today. “Last Tuesday” refers to the Tuesday of the previous Monday–Sunday week. Dates without years use the most recent matching calendar date. To test a precise interpretation, use an ISO date.
 
-## Data and limits
 
-Completed turns live in `.data/chat.sqlite`. Chats are scoped to the browser's session cookie and persist after a restart. Current messages and selected history excerpts are sent to the configured provider for generation. Public web search is the only model tool. This is a local-first demo with a loopback bind, no accounts and no cross-device sync. Keep the database and `.env` out of source control.
 
-See [DESIGN.md](DESIGN.md) for architecture and tradeoffs.
+
+
+Step
+
+
+
+Prompt
+
+
+
+
+
+Start a chat
+
+
+
+Compare Neon Launch and Supabase Pro. Cite each price using an official source.
+
+
+
+
+
+Click New chat
+
+
+
+What did I ask you earlier today about Neon and Supabase?
+
+
+
+
+
+Verify the earlier answer
+
+
+
+Verify the Supabase Pro price from your earlier answer. Put a clickable official citation immediately after the price.
+
+For a broader change check, ask the agent to shortlist five CRM tools for a 20-person sales team. In a new chat, ask whether any of those products changed pricing or shipped a major update since the shortlist. A current price can verify what a vendor charges today. A claim about when it changed needs dated evidence.
+
+How it works
+
+
+
+
+
+Recall. SQLite stores completed turns with timestamps and the browser's local calendar date. The server retrieves exact-date matches, recent turns in the current chat, and relevant full-text matches.
+
+
+
+Search. Web search is the agent's only tool. The default setup uses Groq for reasoning and Tavily for search. The OpenAI configuration uses hosted web search.
+
+
+
+Cite. The server maps cited source IDs to URLs returned by search. The browser renders those URLs as clickable citations next to the claims.
+
+Relative dates use the browser's time zone. An unqualified weekday refers to its most recent occurrence, including today. “Last Tuesday” means Tuesday of the previous Monday–Sunday week. Use an ISO date such as 2026-11-03 when you need an exact day.
+
+Tests and local data
+
+Run npm test without API keys. The offline suite covers date resolution, cross-chat recall, session isolation, response handling, and citation mapping.
+
+Chats persist across server restarts in .data/chat.sqlite and are scoped to the browser's session cookie. The server sends the current message and selected history excerpts to the configured model provider. Keep .env and .data/ local.
+
+See DESIGN.md for architecture choices, tradeoffs, and evaluation plans.
